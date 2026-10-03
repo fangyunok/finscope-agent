@@ -1,0 +1,348 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "profiles_are_confirmed": false,
+  "description": "20 个虚构用户；demo_profile 只供显式演示导入与人工确认，不能作为已确认记忆自动写入。",
+  "users": [
+    {
+      "user_id": "alice",
+      "display_name": "演示用户 alice",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "8000.00",
+        "essential_expense": "6500.00",
+        "available_balance": "5000.00",
+        "goal_amount": "12000.00",
+        "horizon_months": 6,
+        "liquidity_need": "immediate",
+        "risk_preference": "low",
+        "goal_kind": "emergency",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "bob",
+      "display_name": "演示用户 bob",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "18000.00",
+        "essential_expense": "9000.00",
+        "available_balance": "30000.00",
+        "goal_amount": "80000.00",
+        "horizon_months": 12,
+        "liquidity_need": "locked",
+        "risk_preference": "medium",
+        "goal_kind": "purchase",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "carol",
+      "display_name": "演示用户 carol",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "7000.00",
+        "essential_expense": "7500.00",
+        "available_balance": "800.00",
+        "goal_amount": "6000.00",
+        "horizon_months": 4,
+        "liquidity_need": "flexible",
+        "risk_preference": "low",
+        "goal_kind": "purchase",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user04",
+      "display_name": "演示用户 user04",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "8000.00",
+        "essential_expense": "5300.00",
+        "available_balance": "8000.00",
+        "goal_amount": "22000.00",
+        "horizon_months": 7,
+        "liquidity_need": "immediate",
+        "risk_preference": "low",
+        "goal_kind": "emergency",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user05",
+      "display_name": "演示用户 user05",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "8500.00",
+        "essential_expense": "5500.00",
+        "available_balance": "10000.00",
+        "goal_amount": "25000.00",
+        "horizon_months": 8,
+        "liquidity_need": "flexible",
+        "risk_preference": "medium",
+        "goal_kind": "purchase",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user06",
+      "display_name": "演示用户 user06",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "9000.00",
+        "essential_expense": "5700.00",
+        "available_balance": "12000.00",
+        "goal_amount": "28000.00",
+        "horizon_months": 9,
+        "liquidity_need": "locked",
+        "risk_preference": "high",
+        "goal_kind": "long_term",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user07",
+      "display_name": "演示用户 user07",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "9500.00",
+        "essential_expense": "5900.00",
+        "available_balance": "14000.00",
+        "goal_amount": "31000.00",
+        "horizon_months": 10,
+        "liquidity_need": "immediate",
+        "risk_preference": "low",
+        "goal_kind": "emergency",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user08",
+      "display_name": "演示用户 user08",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "10000.00",
+        "essential_expense": "6100.00",
+        "available_balance": "16000.00",
+        "goal_amount": "34000.00",
+        "horizon_months": 11,
+        "liquidity_need": "flexible",
+        "risk_preference": "medium",
+        "goal_kind": "purchase",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user09",
+      "display_name": "演示用户 user09",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "10500.00",
+        "essential_expense": "6300.00",
+        "available_balance": "18000.00",
+        "goal_amount": "37000.00",
+        "horizon_months": 12,
+        "liquidity_need": "locked",
+        "risk_preference": "high",
+        "goal_kind": "long_term",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user10",
+      "display_name": "演示用户 user10",
+      "tenant_id": "alpha",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "11000.00",
+        "essential_expense": "6500.00",
+        "available_balance": "20000.00",
+        "goal_amount": "40000.00",
+        "horizon_months": 13,
+        "liquidity_need": "immediate",
+        "risk_preference": "low",
+        "goal_kind": "emergency",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user11",
+      "display_name": "演示用户 user11",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "11500.00",
+        "essential_expense": "6700.00",
+        "available_balance": "22000.00",
+        "goal_amount": "43000.00",
+        "horizon_months": 14,
+        "liquidity_need": "flexible",
+        "risk_preference": "medium",
+        "goal_kind": "purchase",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user12",
+      "display_name": "演示用户 user12",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "12000.00",
+        "essential_expense": "6900.00",
+        "available_balance": "24000.00",
+        "goal_amount": "46000.00",
+        "horizon_months": 15,
+        "liquidity_need": "locked",
+        "risk_preference": "high",
+        "goal_kind": "long_term",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user13",
+      "display_name": "演示用户 user13",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "12500.00",
+        "essential_expense": "7100.00",
+        "available_balance": "26000.00",
+        "goal_amount": "49000.00",
+        "horizon_months": 16,
+        "liquidity_need": "immediate",
+        "risk_preference": "low",
+        "goal_kind": "emergency",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user14",
+      "display_name": "演示用户 user14",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "13000.00",
+        "essential_expense": "7300.00",
+        "available_balance": "28000.00",
+        "goal_amount": "52000.00",
+        "horizon_months": 17,
+        "liquidity_need": "flexible",
+        "risk_preference": "medium",
+        "goal_kind": "purchase",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user15",
+      "display_name": "演示用户 user15",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "13500.00",
+        "essential_expense": "7500.00",
+        "available_balance": "30000.00",
+        "goal_amount": "55000.00",
+        "horizon_months": 18,
+        "liquidity_need": "locked",
+        "risk_preference": "high",
+        "goal_kind": "long_term",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user16",
+      "display_name": "演示用户 user16",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "14000.00",
+        "essential_expense": "7700.00",
+        "available_balance": "32000.00",
+        "goal_amount": "58000.00",
+        "horizon_months": 19,
+        "liquidity_need": "immediate",
+        "risk_preference": "low",
+        "goal_kind": "emergency",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user17",
+      "display_name": "演示用户 user17",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "14500.00",
+        "essential_expense": "7900.00",
+        "available_balance": "34000.00",
+        "goal_amount": "61000.00",
+        "horizon_months": 20,
+        "liquidity_need": "flexible",
+        "risk_preference": "medium",
+        "goal_kind": "purchase",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user18",
+      "display_name": "演示用户 user18",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "15000.00",
+        "essential_expense": "8100.00",
+        "available_balance": "36000.00",
+        "goal_amount": "64000.00",
+        "horizon_months": 21,
+        "liquidity_need": "locked",
+        "risk_preference": "high",
+        "goal_kind": "long_term",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user19",
+      "display_name": "演示用户 user19",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "15500.00",
+        "essential_expense": "8300.00",
+        "available_balance": "38000.00",
+        "goal_amount": "67000.00",
+        "horizon_months": 22,
+        "liquidity_need": "immediate",
+        "risk_preference": "low",
+        "goal_kind": "emergency",
+        "currency": "CNY"
+      }
+    },
+    {
+      "user_id": "user20",
+      "display_name": "演示用户 user20",
+      "tenant_id": "beta",
+      "synthetic": true,
+      "demo_profile": {
+        "monthly_income": "16000.00",
+        "essential_expense": "8500.00",
+        "available_balance": "40000.00",
+        "goal_amount": "70000.00",
+        "horizon_months": 23,
+        "liquidity_need": "flexible",
+        "risk_preference": "medium",
+        "goal_kind": "purchase",
+        "currency": "CNY"
+      }
+    }
+  ]
+}

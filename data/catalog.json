@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "description": "FinScope 虚构演示目录；8 个当前产品，每个 6 条条款，另含 1 份已失效版本用于时间过滤验证。不含真实产品、收益承诺或资金操作。",
+  "validity_rule": "effective_from <= as_of < effective_to",
+  "products": [
+    {
+      "product_id": "FS-CASH",
+      "name": "即时备用账户",
+      "version": "2026.1",
+      "effective_from": "2026-01-01",
+      "effective_to": "2027-01-01",
+      "synthetic": true,
+      "currency": "CNY",
+      "amount_bounds": {
+        "min": "0.00",
+        "max": "100000.00"
+      },
+      "lock_months": 0,
+      "risk_label": "low",
+      "liquidity": "immediate",
+      "fees_bps": 0,
+      "fees_flat": "0.00",
+      "supported_goals": [
+        "emergency",
+        "purchase"
+      ],
+      "clauses": [
+        {
+          "term_id": "FS-CASH-amount",
+          "kind": "amount",
+          "content": "模拟匹配金额区间为 0.00 至 100000.00 元人民币，包含两个端点；按全部可用余额匹配，不自动拆分资金。"
+        },
+        {
+          "term_id": "FS-CASH-lock",
+          "kind": "lock",
+          "content": "模拟锁定期为 0 个完整月；锁定月份必须不超过用户确认的目标期限。"
+        },
+        {
+          "term_id": "FS-CASH-risk",
+          "kind": "risk",
+          "content": "本演示目录的显式风险标签为低（low）。标签不代表真实产品风险评级，不承诺本金或收益。"
+        },
+        {
+          "term_id": "FS-CASH-liquidity",
+          "kind": "liquidity",
+          "content": "模拟流动性为立即取用（immediate）。立即取用仅为演示规则，不表示真实交易服务。"
+        },
+        {
+          "term_id": "FS-CASH-fees",
+          "kind": "fees",
+          "content": "模拟一次性按匹配金额计费 0 个基点，另加固定费用 0.00 元人民币；1 个基点等于 0.01%。本目录不包含收益率。"
+        },
+        {
+          "term_id": "FS-CASH-goal",
+          "kind": "goal",
+          "content": "模拟支持目标为：应急备用、计划购买。这些目标标签只参与固定规则评分，不能替代用户风险确认。"
+        }
+      ]
+    },
+    {
+      "product_id": "FS-FLEX",
+      "name": "灵活目标账户",
+      "version": "2026.1",
+      "effective_from": "2026-01-01",
+      "effective_to": "2027-01-01",
+      "synthetic": true,
+      "currency": "CNY",
+      "amount_bounds": {
+        "min": "100.00",
+        "max": "200000.00"
+      },
+      "lock_months": 0,
+      "risk_label": "low",
+      "liquidity": "flexible",
+      "fees_bps": 10,
+      "fees_flat": "0.00",
+      "supported_goals": [
+        "purchase",
+        "long_term"
+      ],
+      "clauses": [
+        {
+          "term_id": "FS-FLEX-amount",
+          "kind": "amount",
+          "content": "模拟匹配金额区间为 100.00 至 200000.00 元人民币，包含两个端点；按全部可用余额匹配，不自动拆分资金。"
+        },
+        {
+          "term_id": "FS-FLEX-lock",
+          "kind": "lock",
+          "content": "模拟锁定期为 0 个完整月；锁定月份必须不超过用户确认的目标期限。"
+        },
+        {
+          "term_id": "FS-FLEX-risk",
+          "kind": "risk",
+          "content": "本演示目录的显式风险标签为低（low）。标签不代表真实产品风险评级，不承诺本金或收益。"
+        },
+        {
+          "term_id": "FS-FLEX-liquidity",
+          "kind": "liquidity",
+          "content": "模拟流动性为灵活取用（需一个工作日处理）（flexible）。立即取用仅为演示规则，不表示真实交易服务。"
+        },
+        {
+          "term_id": "FS-FLEX-fees",
+          "kind": "fees",
+          "content": "模拟一次性按匹配金额计费 10 个基点，另加固定费用 0.00 元人民币；1 个基点等于 0.01%。本目录不包含收益率。"
+        },
+        {
+          "term_id": "FS-FLEX-goal",
+          "kind": "goal",
+          "content": "模拟支持目标为：计划购买、长期目标。这些目标标签只参与固定规则评分，不能替代用户风险确认。"
+        }
+      ]
+    },
+    {
+      "product_id": "FS-TERM-3",
+      "name": "三月固定计划",
+      "version": "2026.1",
+      "effective_from": "2026-01-01",
+      "effective_to": "2027-01-01",
+      "synthetic": true,
+      "currency": "CNY",
+      "amount_bounds": {
+        "min": "1000.00",
+        "max": "200000.00"
+      },
+      "lock_months": 3,
+      "risk_label": "low",
+      "liquidity": "locked",
+      "fees_bps": 0,
+      "fees_flat": "0.00",
+      "supported_goals": [
+        "purchase",
+        "long_term"
+      ],
+      "clauses": [
+        {
+          "term_id": "FS-TERM-3-amount",
+          "kind": "amount",
+          "content": "模拟匹配金额区间为 1000.00 至 200000.00 元人民币，包含两个端点；按全部可用余额匹配，不自动拆分资金。"
+        },
+        {
+          "term_id": "FS-TERM-3-lock",
+          "kind": "lock",
+          "content": "模拟锁定期为 3 个完整月；锁定月份必须不超过用户确认的目标期限。"
+        },
+        {
+          "term_id": "FS-TERM-3-risk",
+          "kind": "risk",
+          "content": "本演示目录的显式风险标签为低（low）。标签不代表真实产品风险评级，不承诺本金或收益。"
+        },
+        {
+          "term_id": "FS-TERM-3-liquidity",
+          "kind": "liquidity",
+          "content": "模拟流动性为锁定期内不可取用（locked）。立即取用仅为演示规则，不表示真实交易服务。"
+        },
+        {
+          "term_id": "FS-TERM-3-fees",
+          "kind": "fees",
+          "content": "模拟一次性按匹配金额计费 0 个基点，另加固定费用 0.00 元人民币；1 个基点等于 0.01%。本目录不包含收益率。"
+        },
+        {
+          "term_id": "FS-TERM-3-goal",
+          "kind": "goal",
+          "content": "模拟支持目标为：计划购买、长期目标。这些目标标签只参与固定规则评分，不能替代用户风险确认。"
+        }
+      ]
+    },
+    {
+      "product_id": "FS-TERM-12",
+      "name": "十二月固定计划",
+      "version": "2026.1",
+      "effective_from": "2026-01-01",
+      "effective_to": "2027-01-01",
+      "synthetic": true,
+      "currency": "CNY",
+      "amount_bounds": {
+        "min": "1000.00",
+        "max": "500000.00"
+      },
+      "lock_months": 12,
+      "risk_label": "low",
+      "liquidity": "locked",
+      "fees_bps": 0,
+      "fees_flat": "0.00",
+      "supported_goals": [
+        "long_term"
+      ],
+      "clauses": [
+        {
+          "term_id": "FS-TERM-12-amount",
+          "kind": "amount",
+          "content": "模拟匹配金额区间为 1000.00 至 500000.00 元人民币，包含两个端点；按全部可用余额匹配，不自动拆分资金。"
+        },
+        {
+          "term_id": "FS-TERM-12-lock",
+          "kind": "lock",
+          "content": "模拟锁定期为 12 个完整月；锁定月份必须不超过用户确认的目标期限。"
+        },
+        {
+          "term_id": "FS-TERM-12-risk",
+          "kind": "risk",
+          "content": "本演示目录的显式风险标签为低（low）。标签不代表真实产品风险评级，不承诺本金或收益。"
+        },
+        {
+          "term_id": "FS-TERM-12-liquidity",
+          "kind": "liquidity",
+          "content": "模拟流动性为锁定期内不可取用（locked）。立即取用仅为演示规则，不表示真实交易服务。"
+        },
+        {
+          "term_id": "FS-TERM-12-fees",
+          "kind": "fees",
+          "content": "模拟一次性按匹配金额计费 0 个基点，另加固定费用 0.00 元人民币；1 个基点等于 0.01%。本目录不包含收益率。"
+        },
+        {
+          "term_id": "FS-TERM-12-goal",
+          "kind": "goal",
+          "content": "模拟支持目标为：长期目标。这些目标标签只参与固定规则评分，不能替代用户风险确认。"
+        }
+      ]
+    },
+    {
+      "product_id": "FS-BALANCED",
+      "name": "均衡目标计划",
+      "version": "2026.1",
+      "effective_from": "2026-01-01",
+      "effective_to": "2027-01-01",
+      "synthetic": true,
+      "currency": "CNY",
+      "amount_bounds": {
+        "min": "1000.00",
+        "max": "500000.00"
+      },
+      "lock_months": 0,
+      "risk_label": "medium",
+      "liquidity": "flexible",
+      "fees_bps": 30,
+      "fees_flat": "0.00",
+      "supported_goals": [
+        "purchase",
+        "long_term"
+      ],
+      "clauses": [
+        {
+          "term_id": "FS-BALANCED-amount",
+          "kind": "amount",
+          "content": "模拟匹配金额区间为 1000.00 至 500000.00 元人民币，包含两个端点；按全部可用余额匹配，不自动拆分资金。"
+        },
+        {
+          "term_id": "FS-BALANCED-lock",
+          "kind": "lock",
+          "content": "模拟锁定期为 0 个完整月；锁定月份必须不超过用户确认的目标期限。"
+        },
+        {
+          "term_id": "FS-BALANCED-risk",
+          "kind": "risk",
+          "content": "本演示目录的显式风险标签为中（medium）。标签不代表真实产品风险评级，不承诺本金或收益。"
+        },
+        {
+          "term_id": "FS-BALANCED-liquidity",
+          "kind": "liquidity",
+          "content": "模拟流动性为灵活取用（需一个工作日处理）（flexible）。立即取用仅为演示规则，不表示真实交易服务。"
+        },
+        {
+          "term_id": "FS-BALANCED-fees",
+          "kind": "fees",
+          "content": "模拟一次性按匹配金额计费 30 个基点，另加固定费用 0.00 元人民币；1 个基点等于 0.01%。本目录不包含收益率。"
+        },
+        {
+          "term_id": "FS-BALANCED-goal",
+          "kind": "goal",
+          "content": "模拟支持目标为：计划购买、长期目标。这些目标标签只参与固定规则评分，不能替代用户风险确认。"
+        }
+      ]
+    },
+    {
+      "product_id": "FS-LOCKED-6",
+      "name": "六月进阶计划",
+      "version": "2026.1",
+      "effective_from": "2026-01-01",
+      "effective_to": "2027-01-01",
+      "synthetic": true,
+      "currency": "CNY",
+      "amount_bounds": {
+        "min": "5000.00",
+        "max": "500000.00"
+      },
+      "lock_months": 6,
+      "risk_label": "medium",
+      "liquidity": "locked",
+      "fees_bps": 25,
+      "fees_flat": "0.00",
+      "supported_goals": [
+        "purchase",
+        "long_term"
+      ],
+      "clauses": [
+        {
+          "term_id": "FS-LOCKED-6-amount",
+          "kind": "amount",
+          "content": "模拟匹配金额区间为 5000.00 至 500000.00 元人民币，包含两个端点；按全部可用余额匹配，不自动拆分资金。"
+        },
+        {
+          "term_id": "FS-LOCKED-6-lock",
+          "kind": "lock",
+          "content": "模拟锁定期为 6 个完整月；锁定月份必须不超过用户确认的目标期限。"
+        },
+        {
+          "term_id": "FS-LOCKED-6-risk",
+          "kind": "risk",
+          "content": "本演示目录的显式风险标签为中（medium）。标签不代表真实产品风险评级，不承诺本金或收益。"
+        },
+        {
+          "term_id": "FS-LOCKED-6-liquidity",
+          "kind": "liquidity",
+          "content": "模拟流动性为锁定期内不可取用（locked）。立即取用仅为演示规则，不表示真实交易服务。"
+        },
+        {
+          "term_id": "FS-LOCKED-6-fees",
+          "kind": "fees",
+          "content": "模拟一次性按匹配金额计费 25 个基点，另加固定费用 0.00 元人民币；1 个基点等于 0.01%。本目录不包含收益率。"
+        },
+        {
+          "term_id": "FS-LOCKED-6-goal",
+          "kind": "goal",
+          "content": "模拟支持目标为：计划购买、长期目标。这些目标标签只参与固定规则评分，不能替代用户风险确认。"
+        }
+      ]
+    },
+    {
+      "product_id": "FS-GROWTH-24",
+      "name": "两年成长计划",
+      "version": "2026.1",
+      "effective_from": "2026-01-01",
+      "effective_to": "2027-01-01",
+      "synthetic": true,
+      "currency": "CNY",
+      "amount_bounds": {
+        "min": "10000.00",
+        "max": "2000000.00"
+      },
+      "lock_months": 24,
+      "risk_label": "high",
+      "liquidity": "locked",
+      "fees_bps": 75,
+      "fees_flat": "0.00",
+      "supported_goals": [
+        "long_term"
+      ],
+      "clauses": [
+        {
+          "term_id": "FS-GROWTH-24-amount",
+          "kind": "amount",
+          "content": "模拟匹配金额区间为 10000.00 至 2000000.00 元人民币，包含两个端点；按全部可用余额匹配，不自动拆分资金。"
+        },
+        {
+          "term_id": "FS-GROWTH-24-lock",
+          "kind": "lock",
+          "content": "模拟锁定期为 24 个完整月；锁定月份必须不超过用户确认的目标期限。"
+        },
+        {
+          "term_id": "FS-GROWTH-24-risk",
+          "kind": "risk",
+          "content": "本演示目录的显式风险标签为高（high）。标签不代表真实产品风险评级，不承诺本金或收益。"
+        },
+        {
+          "term_id": "FS-GROWTH-24-liquidity",
+          "kind": "liquidity",
+          "content": "模拟流动性为锁定期内不可取用（locked）。立即取用仅为演示规则，不表示真实交易服务。"
+        },
+        {
+          "term_id": "FS-GROWTH-24-fees",
+          "kind": "fees",
+          "content": "模拟一次性按匹配金额计费 75 个基点，另加固定费用 0.00 元人民币；1 个基点等于 0.01%。本目录不包含收益率。"
+        },
+        {
+          "term_id": "FS-GROWTH-24-goal",
+          "kind": "goal",
+          "content": "模拟支持目标为：长期目标。这些目标标签只参与固定规则评分，不能替代用户风险确认。"
+        }
+      ]
+    },
+    {
+      "product_id": "FS-LIQUID-PLUS",
+      "name": "大额即时账户",
+      "version": "2026.1",
+      "effective_from": "2026-01-01",
+      "effective_to": "2027-01-01",
+      "synthetic": true,
+      "currency": "CNY",
+      "amount_bounds": {
+        "min": "10000.00",
+        "max": "300000.00"
+      },
+      "lock_months": 0,
+      "risk_label": "low",
+      "liquidity": "immediate",
+      "fees_bps": 5,
+      "fees_flat": "0.00",
+      "supported_goals": [
+        "emergency",
+        "purchase",
+        "long_term"
+      ],
+      "clauses": [
+        {
+          "term_id": "FS-LIQUID-PLUS-amount",
+          "kind": "amount",
+          "content": "模拟匹配金额区间为 10000.00 至 300000.00 元人民币，包含两个端点；按全部可用余额匹配，不自动拆分资金。"
+        },
+        {
+          "term_id": "FS-LIQUID-PLUS-lock",
+          "kind": "lock",
+          "content": "模拟锁定期为 0 个完整月；锁定月份必须不超过用户确认的目标期限。"
+        },
+        {
+          "term_id": "FS-LIQUID-PLUS-risk",
+          "kind": "risk",
+          "content": "本演示目录的显式风险标签为低（low）。标签不代表真实产品风险评级，不承诺本金或收益。"
+        },
+        {
+          "term_id": "FS-LIQUID-PLUS-liquidity",
+          "kind": "liquidity",
+          "content": "模拟流动性为立即取用（immediate）。立即取用仅为演示规则，不表示真实交易服务。"
+        },
+        {
+          "term_id": "FS-LIQUID-PLUS-fees",
+          "kind": "fees",
+          "content": "模拟一次性按匹配金额计费 5 个基点，另加固定费用 0.00 元人民币；1 个基点等于 0.01%。本目录不包含收益率。"
+        },
+        {
+          "term_id": "FS-LIQUID-PLUS-goal",
+          "kind": "goal",
+          "content": "模拟支持目标为：应急备用、计划购买、长期目标。这些目标标签只参与固定规则评分，不能替代用户风险确认。"
+        }
+      ]
+    },
+    {
+      "product_id": "FS-CASH",
+      "name": "即时备用账户",
+      "version": "2025.1",
+      "effective_from": "2025-01-01",
+      "effective_to": "2026-01-01",
+      "synthetic": true,
+      "currency": "CNY",
+      "amount_bounds": {
+        "min": "0.00",
+        "max": "50000.00"
+      },
+      "lock_months": 0,
+      "risk_label": "low",
+      "liquidity": "immediate",
+      "fees_bps": 0,
+      "fees_flat": "0.00",
+      "supported_goals": [
+        "emergency",
+        "purchase"
+      ],
+      "clauses": [
+        {
+          "term_id": "FS-CASH-amount",
+          "kind": "amount",
+          "content": "旧版模拟匹配金额区间为 0.00 至 50000.00 元人民币，包含两个端点。该条款在 2026-01-01 起失效。"
+        },
+        {
+          "term_id": "FS-CASH-lock",
+          "kind": "lock",
+          "content": "模拟锁定期为 0 个完整月；锁定月份必须不超过用户确认的目标期限。"
+        },
+        {
+          "term_id": "FS-CASH-risk",
+          "kind": "risk",
+          "content": "本演示目录的显式风险标签为低（low）。标签不代表真实产品风险评级，不承诺本金或收益。"
+        },
+        {
+          "term_id": "FS-CASH-liquidity",
+          "kind": "liquidity",
+          "content": "模拟流动性为立即取用（immediate）。立即取用仅为演示规则，不表示真实交易服务。"
+        },
+        {
+          "term_id": "FS-CASH-fees",
+          "kind": "fees",
+          "content": "模拟一次性按匹配金额计费 0 个基点，另加固定费用 0.00 元人民币；1 个基点等于 0.01%。本目录不包含收益率。"
+        },
+        {
+          "term_id": "FS-CASH-goal",
+          "kind": "goal",
+          "content": "模拟支持目标为：应急备用、计划购买。这些目标标签只参与固定规则评分，不能替代用户风险确认。"
+        }
+      ]
+    }
+  ]
+}

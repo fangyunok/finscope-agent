@@ -1,0 +1,765 @@
+{
+  "evaluation_version": "synthetic-sequences-v1",
+  "synthetic": true,
+  "label_origin": "Manually specified cashflow arithmetic and scenario constraints; no model outputs used as labels.",
+  "base_profile": {
+    "monthly_income": "8000.00",
+    "essential_expense": "6500.00",
+    "available_balance": "5000.00",
+    "goal_amount": "12000.00",
+    "horizon_months": 6,
+    "liquidity_need": "immediate",
+    "risk_preference": "low",
+    "goal_kind": "emergency",
+    "currency": "CNY"
+  },
+  "cases": [
+    {
+      "case_id": "baseline_restart",
+      "description": "确认画像重启后计算7000/1500向上取整为5个月",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {},
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "before",
+          "expected": {
+            "result.model_used": false,
+            "result.calculation.monthly_surplus": "1500.00",
+            "result.calculation.goal_gap": "7000.00",
+            "result.calculation.months_to_goal": 5,
+            "eligible_ids": [
+              "FS-CASH"
+            ]
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.profile_version": 1,
+            "result.calculation.months_to_goal": 5,
+            "eligible_ids": [
+              "FS-CASH"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "horizon_update",
+      "description": "确认期限6改3后新会话不再按原期限判断",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {},
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "confirm_profile",
+          "patch": {
+            "horizon_months": 3
+          },
+          "expected": {
+            "version": 2
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.calculation.horizon_months": 3,
+            "result.calculation.horizon_feasible": false,
+            "result.profile_version": 2
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "risk_update",
+      "description": "显式风险上限从medium降low排除medium产品",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {
+            "horizon_months": 12,
+            "liquidity_need": "locked",
+            "risk_preference": "medium",
+            "goal_kind": "long_term"
+          },
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "eligible_ids": [
+              "FS-CASH",
+              "FS-FLEX",
+              "FS-TERM-3",
+              "FS-TERM-12",
+              "FS-BALANCED",
+              "FS-LOCKED-6"
+            ]
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "confirm_profile",
+          "patch": {
+            "risk_preference": "low"
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "eligible_ids": [
+              "FS-CASH",
+              "FS-FLEX",
+              "FS-TERM-3",
+              "FS-TERM-12"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "liquidity_update",
+      "description": "明确改为立即取用排除灵活与锁定产品",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {
+            "horizon_months": 12,
+            "liquidity_need": "locked",
+            "risk_preference": "medium",
+            "goal_kind": "long_term"
+          },
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "confirm_profile",
+          "patch": {
+            "liquidity_need": "immediate"
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "eligible_ids": [
+              "FS-CASH"
+            ],
+            "result.profile.data.risk_preference": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "emergency_goal_update",
+      "description": "改为应急目标后即使允许锁定也要求立即取用",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {
+            "horizon_months": 12,
+            "liquidity_need": "locked",
+            "risk_preference": "medium",
+            "goal_kind": "long_term"
+          },
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "confirm_profile",
+          "patch": {
+            "goal_kind": "emergency"
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "eligible_ids": [
+              "FS-CASH"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "favorite_not_risk",
+      "description": "收藏高风险产品不改变已确认low风险上限",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {},
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "feedback",
+          "product_id": "FS-GROWTH-24",
+          "action": "favorite",
+          "expected": {
+            "risk_preference_updated": false
+          }
+        },
+        {
+          "operation": "profile",
+          "expected": {
+            "data.risk_preference": "low",
+            "version": 1
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "eligible_ids": [
+              "FS-CASH"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "explicit_exclusion",
+      "description": "确认排除唯一合法候选后下一会话没有候选",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {},
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "feedback",
+          "product_id": "FS-CASH",
+          "action": "exclude"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "eligible_ids": [],
+            "result.matching.status": "no_eligible_products"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "memory_delete",
+      "description": "删除后旧运行404新会话要求重新确认资料",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {},
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "before_delete",
+          "expected": {
+            "result.model_used": false,
+            "result.status": "completed"
+          }
+        },
+        {
+          "operation": "delete",
+          "expected": {
+            "deleted": true,
+            "memory_epoch": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "profile",
+          "expected": {
+            "data": {},
+            "complete": false
+          }
+        },
+        {
+          "operation": "missing_run",
+          "name": "before_delete",
+          "expected": {
+            "not_found": true
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.status": "needs_profile"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "user_isolation",
+      "description": "Bob新会话不能读取Alice画像或分析记录",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {},
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "alice",
+          "expected": {
+            "result.model_used": false,
+            "result.status": "completed"
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "profile",
+          "user_id": "bob",
+          "expected": {
+            "data": {},
+            "version": 0
+          }
+        },
+        {
+          "operation": "missing_run",
+          "name": "alice",
+          "user_id": "bob",
+          "expected": {
+            "not_found": true
+          }
+        },
+        {
+          "operation": "analyze",
+          "user_id": "bob",
+          "expected": {
+            "result.status": "needs_profile",
+            "result.model_used": false
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "unconfirmed_update",
+      "description": "待确认期限提议跨会话保留但不覆盖当前期限",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {},
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "propose",
+          "patch": {
+            "horizon_months": 3
+          },
+          "name": "pending"
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.profile_version": 1,
+            "result.calculation.horizon_months": 6,
+            "result.calculation.horizon_feasible": true
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "missing_fields",
+      "description": "部分资料经过确认并重启仍先要求补全",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "patch": {
+            "monthly_income": "8000.00"
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.status": "needs_profile",
+            "result.profile.data.monthly_income": "8000.00"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "zero_surplus",
+      "description": "每月无结余且目标未达成时月数为null",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {
+            "monthly_income": "6500.00"
+          },
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.calculation.monthly_surplus": "0.00",
+            "result.calculation.months_to_goal": null,
+            "result.calculation.status": "unreachable"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "negative_surplus",
+      "description": "月结余负数不会得到负的达成月数",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {
+            "monthly_income": "5000.00"
+          },
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.calculation.monthly_surplus": "-1500.00",
+            "result.calculation.months_to_goal": null,
+            "result.calculation.horizon_feasible": false
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "already_achieved",
+      "description": "现有余额超过目标则差额0达成月数0",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {
+            "goal_amount": "4000.00"
+          },
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.calculation.goal_gap": "0.00",
+            "result.calculation.months_to_goal": 0,
+            "result.calculation.status": "already_achieved"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "decimal_round_up",
+      "description": "10.01元差额每月0.50元至少21个月",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {
+            "monthly_income": "6500.50",
+            "goal_amount": "5010.01",
+            "horizon_months": 24
+          },
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.calculation.monthly_surplus": "0.50",
+            "result.calculation.goal_gap": "10.01",
+            "result.calculation.months_to_goal": 21
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "exact_month_boundary",
+      "description": "4500/1500正好3个月与期限相等可达",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {
+            "goal_amount": "9500.00",
+            "horizon_months": 3
+          },
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.calculation.months_to_goal": 3,
+            "result.calculation.horizon_feasible": true
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "no_products_for_amount",
+      "description": "可用金额300万元超过所有模拟产品上限",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {
+            "available_balance": "3000000.00",
+            "goal_amount": "4000000.00"
+          },
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "eligible_ids": [],
+            "result.matching.status": "no_eligible_products"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "stale_proposal",
+      "description": "先确认另一个更新后旧提议不能覆盖新版本",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {},
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "propose",
+          "patch": {
+            "horizon_months": 3
+          },
+          "name": "old"
+        },
+        {
+          "operation": "confirm_profile",
+          "patch": {
+            "horizon_months": 9
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "confirm",
+          "name": "old",
+          "error_code": "stale_proposal",
+          "expected": {
+            "error_code": "stale_proposal"
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.profile_version": 2,
+            "result.calculation.horizon_months": 9
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "repeated_confirmation",
+      "description": "同一提议确认后重启重复确认保持同版本",
+      "actions": [
+        {
+          "operation": "propose",
+          "full": true,
+          "patch": {},
+          "name": "initial"
+        },
+        {
+          "operation": "confirm",
+          "name": "initial",
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "confirm",
+          "name": "initial",
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "analyze",
+          "name": "latest",
+          "expected": {
+            "result.model_used": false,
+            "result.profile_version": 1,
+            "result.calculation.months_to_goal": 5
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "effective_term_version",
+      "description": "跨会话检索生效日期不混用旧产品版本",
+      "actions": [
+        {
+          "operation": "confirm_profile",
+          "full": true,
+          "patch": {},
+          "expected": {
+            "version": 1
+          }
+        },
+        {
+          "operation": "terms",
+          "query": "费用",
+          "as_of": "2025-10-03",
+          "product_id": "FS-CASH",
+          "expected": {
+            "versions": [
+              "2025.1"
+            ],
+            "has_sources": true
+          }
+        },
+        {
+          "operation": "reopen"
+        },
+        {
+          "operation": "terms",
+          "query": "费用",
+          "as_of": "2026-10-03",
+          "product_id": "FS-CASH",
+          "expected": {
+            "versions": [
+              "2026.1"
+            ],
+            "has_sources": true
+          }
+        }
+      ]
+    }
+  ]
+}
