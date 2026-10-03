@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools==84.0.0", "wheel==0.48.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finscope-agent"
+version = "0.1.0"
+description = "Confirmed user memory, auditable financial calculations, and synthetic product matching via MCP"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "FinScope contributors"}]
+dependencies = [
+  "httpx==0.28.1",
+  "mcp==2.2.0",
+  "pydantic==2.13.5",
+  "starlette==1.7.0",
+  "uvicorn==0.54.0",
+  "python-multipart==0.0.32",
+]
+
+[project.optional-dependencies]
+dev = ["build==1.4.2"]
+
+[project.scripts]
+finscope = "finscope.cli:main"
+
+[project.urls]
+Repository = "https://github.com/fangyunok/finscope-agent"
+Issues = "https://github.com/fangyunok/finscope-agent/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+finscope = ["data/*.json"]

@@ -1,0 +1,140 @@
+name: FinScope checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.12"]
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            requirements.lock.txt
+      - name: Install tested dependencies
+        run: |
+          python -m pip install -r requirements.lock.txt
+          python -m pip install -e ".[dev]"
+          python -m pip check
+      - name: Run business, MCP, memory and HTTP tests
+        run: python -m unittest discover -s tests -v
+      - name: Verify all bundled fixtures match source data
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root = Path.cwd()
+          fixtures = list((root / "data").glob("*.json"))
+          assert len(fixtures) == 3
+          for source in fixtures:
+              packed = root / "src" / "finscope" / "data" / source.name
+              assert source.read_bytes() == packed.read_bytes(), "Source/package fixture drift: " + source.name
+          print("All three bundled fixture files match source data")
+          PY
+      - name: Build distributable wheel
+        run: python -m build --wheel
+      - name: Test installed wheel outside the checkout
+        shell: bash
+        run: |
+          python - <<'PY'
+          import http.cookiejar
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import tempfile
+          import time
+          import urllib.error
+          import urllib.request
+          import venv
+          import zipfile
+
+          repository = Path.cwd()
+          wheel = next((repository / "dist").glob("*.whl"))
+          with zipfile.ZipFile(wheel) as archive:
+              package_root = repository / "src" / "finscope"
+              for source in package_root.rglob("*"):
+                  if source.is_file() and source.suffix in {".py", ".json"}:
+                      member = "finscope/" + source.relative_to(package_root).as_posix()
+                      assert archive.read(member) == source.read_bytes(), "Wheel source mismatch: " + member
+          with tempfile.TemporaryDirectory() as folder:
+              temporary = Path(folder)
+              environment = temporary / "venv"
+              venv.EnvBuilder(with_pip=True).create(environment)
+              interpreter = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+              subprocess.run([str(interpreter), "-m", "pip", "install", "-r", str(repository / "requirements.lock.txt"), str(wheel)], check=True)
+              subprocess.run([str(interpreter), "-m", "pip", "check"], check=True)
+              command = [str(interpreter), "-m", "finscope"]
+              subprocess.run(command + ["--help"], cwd=temporary, check=True)
+              subprocess.run(command + ["doctor", "--mode", "fixture"], cwd=temporary, check=True)
+              database = temporary / "business.sqlite"
+              demonstration = subprocess.run(command + ["demo", "--db", str(database), "--mode", "fixture"], cwd=temporary, check=True, capture_output=True, text=True, encoding="utf-8")
+              report = json.loads(demonstration.stdout)
+              assert report["monthly_surplus"] == "1500.00" and report["goal_gap"] == "7000.00" and report["months_to_goal"] == 5
+              assert report["profile_restored"] is True and report["updated_horizon_feasible"] is False
+              assert report["memory_deleted"] is True and report["old_run_inaccessible"] is True
+              assert report["model_used"] is False and report["final_status"] == "needs_profile"
+              print(json.dumps(report, indent=2))
+              evaluation_file = temporary / "evaluation.json"
+              subprocess.run(command + ["evaluate", "--output", str(evaluation_file)], cwd=temporary, check=True, stdout=subprocess.DEVNULL)
+              evaluation = json.loads(evaluation_file.read_text(encoding="utf-8"))
+              assert evaluation["passed"] is True and evaluation["cases_passed"] == 20 and evaluation["model_used"] is False
+              artifact_directory = repository / "runs"
+              artifact_directory.mkdir(exist_ok=True)
+              (artifact_directory / "evaluation.json").write_bytes(evaluation_file.read_bytes())
+              process = subprocess.Popen(command + ["serve", "--db", str(database), "--mode", "fixture", "--port", "7862"], cwd=temporary, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+              try:
+                  ready = False
+                  for attempt in range(60):
+                      if process.poll() is not None:
+                          raise RuntimeError(process.stderr.read().decode("utf-8", errors="replace"))
+                      try:
+                          with urllib.request.urlopen("http://127.0.0.1:7862/health", timeout=1) as response:
+                              assert response.status == 200
+                              ready = True
+                              break
+                      except (urllib.error.URLError, TimeoutError):
+                          time.sleep(0.25)
+                  assert ready, "Installed wheel HTTP server did not start"
+                  with urllib.request.urlopen("http://127.0.0.1:7862/", timeout=3) as response:
+                      html = response.read().decode("utf-8")
+                      assert response.status == 200 and "FinScope" in html
+                  with urllib.request.urlopen("http://127.0.0.1:7862/api/demo-users", timeout=3) as response:
+                      assert response.status == 200 and b"alice" in response.read()
+                  opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+                  def post(path, payload):
+                      request = urllib.request.Request("http://127.0.0.1:7862" + path, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json", "Origin": "http://127.0.0.1:7862"}, method="POST")
+                      with opener.open(request, timeout=10) as response:
+                          return json.loads(response.read().decode("utf-8"))
+                  assert post("/api/login", {"user_id": "alice"})["user_id"] == "alice"
+                  answer = post("/api/term-answers", {"question": "费用", "product_id": "FS-CASH", "as_of": "2026-10-03"})
+                  assert answer["status"] == "source_preview" and answer["model_used"] is False
+                  assert answer["sources"] and answer["citations"]
+                  assert all(source["product_id"] == "FS-CASH" and source["synthetic"] is True for source in answer["sources"])
+                  print("Installed wheel memory demo, twenty sequences, live HTTP and cited term preview passed")
+              finally:
+                  process.terminate()
+                  process.wait(timeout=10)
+          PY
+      - name: Upload synthetic sequence report
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-evaluation-${{ matrix.os }}-py${{ matrix.python }}
+          path: runs/evaluation.json
+          if-no-files-found: error
