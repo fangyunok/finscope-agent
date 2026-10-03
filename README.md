@@ -1,4 +1,4 @@
-# FinScope：用户画像与金融需求分析平台
+# FinScope：用户画像驱动的金融需求分析 Agent
 
 [![FinScope checks](https://github.com/fangyunok/finscope-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/fangyunok/finscope-agent/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://github.com/fangyunok/finscope-agent/blob/main/pyproject.toml)
@@ -10,6 +10,17 @@ FinScope 把**用户确认的跨会话画像、确定性收支计算、模拟产
 本地 Windows / Python 3.12 已通过 **100 项测试**，20 组独立模拟序列全部通过。跨平台结果以顶部 CI 链接为准。
 
 ![FinScope 本机工作台：确认画像、现金流计算及模拟产品匹配](docs/assets/workbench.png)
+
+## 先看结论
+
+| 问题 | 结论 | 证据 |
+| --- | --- | --- |
+| 长期记忆是真实持久化，还是拼接对话历史 | 资料以**用户确认的结构化画像**存入 SQLite，重建服务实例后仍按同一版本读回；未经确认的提议不会生效 | [架构](docs/ARCHITECTURE.md) |
+| 金额由谁计算 | Decimal 确定性计算，单位与舍入规则显式列出；模型不参与任何数值计算 | [架构](docs/ARCHITECTURE.md) |
+| 旧确认会不会覆盖新资料 | 确认需要提议 ID、当前画像版本与内容哈希三方校验，并在事务内重新核查；过期提议不能覆盖已更新的画像 | [架构](docs/ARCHITECTURE.md) |
+| 删除后旧请求还能写回吗 | 删除递增记忆代次 `memory_epoch`，持旧代次的在途分析与提议在完成时被阻断；旧运行 ID 不可访问 | [架构](docs/ARCHITECTURE.md) |
+| 产品匹配是否可信 | 金额、期限、流动性、明确风险偏好为硬约束，先过滤再排序；候选附来源条款，不匹配项附具体排除原因 | [架构](docs/ARCHITECTURE.md) |
+| 怎么验证跨会话行为 | 100 项测试，加 20 组预先标注的独立模拟序列（83 次真实 MCP 调用、0 次模型调用） | [评测说明](docs/EVALUATION.md) |
 
 ## 能演示什么
 
@@ -86,6 +97,7 @@ $env:FINSCOPE_QWEN_MODEL = "qwen3:4b-instruct"
 | [架构与数据边界](docs/ARCHITECTURE.md) | 分层、确认事务、删除语义、工具约束 |
 | [接口说明](docs/API.md) | HTTP 与 MCP 接口、请求示例 |
 | [评测说明](docs/EVALUATION.md) | 测试范围、标签、局限与真实模型状态 |
-| [面试与简历材料](docs/RESUME_ENTRY.md) | 可核实的项目描述及演示顺序 |
+| [项目状态与验证范围](docs/STATE.md) | 已验证 / 未验证清单、复现命令 |
+| [项目描述材料](docs/RESUME_ENTRY.md) | 可核实的项目描述及演示顺序 |
 
 依赖版本锁定在 `requirements.lock.txt`。CI 配置覆盖 Ubuntu / Windows 与 Python 3.11 / 3.12，并检查 wheel 在源码目录之外安装、演示和启动 HTTP 服务。代码与模拟数据采用 [MIT License](LICENSE)。
