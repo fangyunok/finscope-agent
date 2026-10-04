@@ -6,7 +6,18 @@
 
 ## 模拟序列
 
-标签保存于 `data/evaluation_cases.json`，与打包副本一致。每组序列使用独立临时数据库，标签在执行前给定，不通过复制被测函数的输出生成。序列覆盖确认前资料、跨服务实例重启、期限与风险偏好更新、删除、用户隔离、零或负结余、已达成目标、向上取整以及没有合法产品候选。
+标签保存于 `data/evaluation_cases.json`，与打包副本一致。每组序列使用独立临时数据库，标签在执行前给定，不通过复制被测函数的输出生成。
+
+20 组序列覆盖：
+
+| 方向 | 用例 |
+| --- | --- |
+| 跨会话与重启 | `baseline_restart`、`horizon_update`、`risk_update`、`liquidity_update`、`emergency_goal_update` |
+| 反馈与兴趣信号 | `favorite_not_risk`、`explicit_exclusion` |
+| 删除与隔离 | `memory_delete`、`user_isolation` |
+| 确认语义 | `unconfirmed_update`、`stale_proposal`、`repeated_confirmation` |
+| 计算边界 | `zero_surplus`、`negative_surplus`、`already_achieved`、`decimal_round_up`、`exact_month_boundary` |
+| 数据与条款版本 | `missing_fields`、`no_products_for_amount`、`effective_term_version` |
 
 ```powershell
 .\.venv\Scripts\python.exe -m finscope evaluate --output runs/evaluation.json
@@ -16,18 +27,20 @@
 
 本次本地 Windows / Python 3.12 执行 **20 / 20 组通过**；可查看[完整模拟报告](evaluation_report.json)。这份报告不代表其他环境的 CI 状态，跨平台结果以仓库 Actions 为准。
 
-该评测执行 `fixture` 模式；显式 JSON 解析、真实 MCP 调用和已确认结构化记忆可重复验证。它没有评价自然语言字段抽取准确率、回答语义质量、投资收益、真实排序质量或用户转化。
+该评测在 `fixture` 模式下执行：显式 JSON 解析、真实 MCP 调用与已确认的结构化记忆可重复验证，因此结果与外部服务状态无关。扩展到真实模型质量、投资收益或排序质量的指标设计见[演进路线](ROADMAP.md)。
 
 ## 测试边界
 
 - 确定性计算使用人工预先算出的结余、差额和整月标签，并覆盖单位、精度与边界输入。
 - 画像确认、版本和记忆代次通过真实 SQLite 测试；删除后旧记录访问与并发写回分别验证。
-- MCP 测试执行实际服务端 / 客户端协议，不是用字典模拟工具返回。
-- 模型 HTTP 协议测试采用 `httpx.MockTransport`，验证非法字段、无依据引用和服务错误；这些不是实际 Qwen 测试。
-- 网页测试验证同源写入、会话隔离、确认和删除流程。CI 另运行安装后的 live HTTP smoke。
+- MCP 测试执行实际服务端 / 客户端协议，而不是用字典模拟工具返回。
+- 模型 HTTP 协议测试采用 `httpx.MockTransport` 隔离外部依赖，逐项验证非法字段、无依据引用与服务错误路径。
+- 网页测试验证同源写入、会话隔离、确认与删除流程。CI 另运行安装后的 live HTTP smoke。
 
-## 尚未验证
+## 后续评测计划
 
-真实 Qwen 服务尚未完成端到端验证。接入后需要另建带人工标签的中文字段抽取和条款问题集，检查引用语义支持，记录模型名、配置、失败率、延迟和实际 token 用量。
+1. **检索质量**：在混合检索落地后输出 Recall@1/3/5、MRR、nDCG、延迟分位数与 bootstrap 置信区间，并按查询类型分组。
+2. **记忆方案对照**：比较「无跨会话记忆」「最近若干轮对话历史」「已确认结构化画像」在偏好更新正确率、隔离与删除语义、耗时与 token 用量上的差异。
+3. **模型质量**：接入真实服务后建立带人工标签的中文字段抽取集与条款问答集，逐项记录模型名、配置、失败率、延迟与 token 用量。
 
-原方案提出比较无记忆、最近对话历史与确认的结构化画像；当前实现只有确认的结构化画像，没有把另两种方案包装成已完成实验。没有有效真实交互标签时，不报告 Recall@k、NDCG@k 或声称排序权重已训练。
+三项计划的实现路径见[演进路线](ROADMAP.md)。在此之前，仓库不报告字段抽取准确率、回答语义质量、投资收益或排序质量指标。
