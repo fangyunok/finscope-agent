@@ -121,6 +121,10 @@ $env:FINSCOPE_QWEN_MODEL = "qwen3:4b-instruct"
 
 更完整的验证范围见[项目状态与验证范围](docs/STATE.md)，评测口径见[评测说明](docs/EVALUATION.md)，后续演进见[演进路线](docs/ROADMAP.md)。
 
+## Go 计算侧车
+
+确定性计算热路径（金额校验、现金流目标、产品硬约束匹配与规则打分）另有一套**语义对等的 Go 实现**，位于 [`go/`](go/) 目录，用 `math/big.Rat` 精确有理数运算与 Python `Decimal` 语义对齐，通过 [`go/core/matching_test.go`](go/core/matching_test.go) 的黄金对拍测试锁定与 Python oracle 逐字段一致。这一层只做纯计算，模型抽取、MCP 工具路由、SQLite 事务与乐观锁仍由 Python 服务负责。详见 [Go 计算侧车](go/docs/go-sidecar.md)。
+
 ## 工程资料
 
 | 文档 | 内容 |
